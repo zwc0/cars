@@ -48,5 +48,8 @@ z.z('#dt',0).onclick=()=>window.open(`https://www.decodethis.com/vin/${z.v('#vin
 z.z('#nam',0).onclick=()=>window.open(`https://www.northamericanmotoring.com/forums/vindecoder.php?vin=${z.v('#vin')}`);
 z.z('#at',0).onclick=()=>window.open(`https://www.autotrader.com/cars-for-sale/${z.v('#year')}/${z.v('#make')}/${z.v('#model')}`);
 z.z('#dealer',0).onclick=()=>window.open(`https://www.google.com/search?q=${z.v('#make')} dealer`);
-if(window.location.search){z.v('#vin',window.location.search.slice(1));z.z(#'vd',0).click()};
+if(window.location.search){
+  z.v('#vin',window.location.search.slice(1));
+  z.z('#vd',0).click();return false;
+};
 </script>
