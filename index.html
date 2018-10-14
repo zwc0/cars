@@ -1,9 +1,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   td{width:33%}
-  input{width:100%}
+  table,button,input{width:100%}
 </style>
-<table style="width:100%">
+<table>
   <tr>
     <td>year</td>
     <td>make</td>
@@ -15,10 +15,11 @@
     <td><input id="model"></td>
   </tr>
   <tr>
-    <td colspan=3>VIN</td>
+    <td colspan=2>VIN</td><td>ZIP</td>
   </tr>
   <tr>
-    <td colspan=3><input id="vin" style="width:100%"></td>
+    <td colspan=2><input id="vin"></td>
+    <td><input id="zip"></td>
   </tr>
   <tr>
     <td><button id="vd">VIN Decode</button></td>
@@ -32,6 +33,8 @@
   </tr>
   <tr>
     <td><button id="dealer">Find Dealer</button></td>
+    <td></td>
+    <td><button id="tax">Tax Rate</button></td>
   </tr>
 </table>
 <script type="module">
@@ -51,8 +54,9 @@ z.z('#nada',0).onclick=()=>window.open(`https://www.nadaguides.com/Cars/${z.v('#
 z.z('#kbb',0).onclick=()=>window.open(`https://www.kbb.com/${z.v('#make')}/${z.v('#model')}/${z.v('#year')}/styles/?intent=buy-used&pricetype=retail`);
 z.z('#dt',0).onclick=()=>window.open(`https://www.decodethis.com/vin/${z.v('#vin')}`);
 z.z('#nam',0).onclick=()=>window.open(`https://www.northamericanmotoring.com/forums/vindecoder.php?vin=${z.v('#vin')}`);
-z.z('#at',0).onclick=()=>window.open(`https://www.autotrader.com/cars-for-sale/${z.v('#year')}/${z.v('#make')}/${z.v('#model')}`);
+z.z('#at',0).onclick=()=>window.open(`https://www.autotrader.com/cars-for-sale/${z.v('#year')}/${z.v('#make')}/${z.v('#model')}/?zip=${z.v('#zip')}`);
 z.z('#dealer',0).onclick=()=>window.open(`https://www.google.com/search?q=${z.v('#make')} dealer`);
+z.z('#tax',0).onclick=()=>window.open(`http://www.sale-tax.com/${z.v('#zip')}`);
 if(window.location.search){
   z.v('#vin',window.location.search.slice(1));
   z.z('#vd',0).click();
