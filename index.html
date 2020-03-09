@@ -1,45 +1,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  td{width:33%}
-  table,button,input{width:100%}
+  center
+  {
+    display: grid;
+    grid: auto / 1fr 1fr 1fr;
+    grid-gap: .5em;
+  }
+  input{width:100%}
+  .c2{grid-column: span 2}
 </style>
-<table>
-  <tr>
-    <td>year</td>
-    <td>make</td>
-    <td>model</td>
-  </tr>
-  <tr>
-    <td><input id="year"></td>
-    <td><input id="make"></td>
-    <td><input id="model"></td>
-  </tr>
-  <tr>
-    <td colspan=2>VIN</td><td>ZIP</td>
-  </tr>
-  <tr>
-    <td colspan=2><input id="vin"></td>
-    <td><input id="zip"></td>
-  </tr>
-  <tr>
-    <td><button id="vd">VIN Decode</button></td>
-    <td><button id="nada">NADA</button></td>
-    <td><button id="kbb">KBB</button></td>
-  </tr>
-  <tr>
-    <td><button id="dt">Decode This</button></td>
-    <td><button id="nam">North American Motoring</button></td>
-    <td><button id="at">AutoTrader</button></td>
-  </tr>
-  <tr>
-    <td><button id="dealer">Find Dealer</button></td>
-    <td></td>
-    <td><button id="tax">Tax Rate</button></td>
-  </tr>
-</table>
+<center>
+  <a>Year</a>
+  <a>Make</a>
+  <a>Model</a>
+  <input id="year">
+  <input id="make">
+  <input id="model">
+  <a class="c2">VIN</a>
+  <a>ZIP</a>
+  <input id="vin" class="c2">
+  <input id="zip">
+  <button id="decode">VIN Decode</button>
+  <button id="nada">NADA</button>
+  <button id="kbb">KBB</button>
+  <button id="decodeThis">Decode This</button>
+  <button id="nam">North American Motoring</button>
+  <button id="autotrader">AutoTrader</button>
+  <button id="dealer">Find Dealer</button>
+  <button id="parts">Parts</button>
+  <button id="tax">Tax Rate</button>
+</center>
+<footer><small>*VIN decoder provided by https://vpic.nhtsa.dot.gov</small></footer>
 <script type="module">
 import * as z from 'https://cdn.rawgit.com/zerowolfcode/zlib/4cd52327/zt.js';
-z.z('#vd',0).onclick=()=>{
+z.z('#decode',0).onclick=()=>{
   fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${z.v('#vin')}?format=json`)
   .then(e=>e.json())
   .then(e=>{
@@ -52,13 +46,14 @@ z.z('#vd',0).onclick=()=>{
 };
 z.z('#nada',0).onclick=()=>window.open(`https://www.nadaguides.com/Cars/${z.v('#year')}/${z.v('#make')}/${z.v('#model')}`);
 z.z('#kbb',0).onclick=()=>window.open(`https://www.kbb.com/${z.v('#make')}/${z.v('#model')}/${z.v('#year')}/styles/?intent=buy-used&pricetype=retail`);
-z.z('#dt',0).onclick=()=>window.open(`https://www.decodethis.com/vin/${z.v('#vin')}`);
+z.z('#decodeThis',0).onclick=()=>window.open(`https://www.decodethis.com/vin/${z.v('#vin')}`);
 z.z('#nam',0).onclick=()=>window.open(`https://www.northamericanmotoring.com/forums/vindecoder.php?vin=${z.v('#vin')}`);
-z.z('#at',0).onclick=()=>window.open(`https://www.autotrader.com/cars-for-sale/${z.v('#year')}/${z.v('#make')}/${z.v('#model')}/?zip=${z.v('#zip')}`);
+z.z('#autotrader',0).onclick=()=>window.open(`https://www.autotrader.com/cars-for-sale/${z.v('#year')}/${z.v('#make')}/${z.v('#model')}/?zip=${z.v('#zip')}`);
 z.z('#dealer',0).onclick=()=>window.open(`https://www.google.com/search?q=${z.v('#make')} dealer`);
+z.z('#parts',0).onclick=()=>window.open(`https://www.google.com/search?q=${z.v('#year')} ${z.v('#make')} ${z.v('#model')} parts`);
 z.z('#tax',0).onclick=()=>window.open(`http://www.sale-tax.com/${z.v('#zip')}`);
 if(window.location.search){
   z.v('#vin',window.location.search.slice(1));
-  z.z('#vd',0).click();
+  z.z('#decode',0).click();
 };
 </script>
