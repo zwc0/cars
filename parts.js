@@ -1,7 +1,7 @@
 export var
-Ford = {
+ford = {
   "OEM": "parts.ford.com",
 },
-Toyota = {
+toyota = {
   "OEM": "parts.toyota.com",
 };
