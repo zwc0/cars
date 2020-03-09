@@ -9,7 +9,7 @@
   input{width:100%}
   .c2{grid-column: span 2}
 </style>
-<center>
+<center id="main">
   <a>Year</a>
   <a>Make</a>
   <a>Model</a>
@@ -30,9 +30,11 @@
   <button id="parts">Parts</button>
   <button id="tax">Tax Rate</button>
 </center>
+<div id="partsList"></div>
 <footer><small>*VIN decoder provided by https://vpic.nhtsa.dot.gov</small></footer>
 <script type="module">
 import * as z from 'https://cdn.rawgit.com/zerowolfcode/zlib/4cd52327/zt.js';
+import * as parts from 'https://zwc0.github.io/cars/parts.js';
 z.z('#decode',0).onclick=()=>{
   fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${z.v('#vin')}?format=json`)
   .then(e=>e.json())
@@ -50,7 +52,36 @@ z.z('#decodeThis',0).onclick=()=>window.open(`https://www.decodethis.com/vin/${z
 z.z('#nam',0).onclick=()=>window.open(`https://www.northamericanmotoring.com/forums/vindecoder.php?vin=${z.v('#vin')}`);
 z.z('#autotrader',0).onclick=()=>window.open(`https://www.autotrader.com/cars-for-sale/${z.v('#year')}/${z.v('#make')}/${z.v('#model')}/?zip=${z.v('#zip')}`);
 z.z('#dealer',0).onclick=()=>window.open(`https://www.google.com/search?q=${z.v('#make')} dealer`);
-z.z('#parts',0).onclick=()=>window.open(`https://www.google.com/search?q=${z.v('#year')} ${z.v('#make')} ${z.v('#model')} parts`);
+
+var listParts=(p)=>{
+  //back
+  let center = z.c('center');
+  let button = z.c('button');
+  button.textContent='Back';
+  button.onclick=()=>{z.s('#main');z.h('#partsList');center.remove();return false};
+  z.a(center,button);
+  //google
+  button = z.c('button');
+  button.textContent='Google';
+  button.onclick=()=>window.open(`https://www.google.com/search?q=${z.v('#year')} ${z.v('#make')} ${z.v('#model')} parts`);
+  z.a(center,button);
+  //display other options
+  for ( var i in p ){
+    button = z.c('button');
+    button.textContent = i;
+    button.onclick=()=>window.open(`https://${p[i]}`);
+    z.a(center,button);
+  }
+  z.a('#partsList',center);
+  z.h('#main');
+  z.s('#partsList');
+};
+
+z.z('#parts',0).onclick=()=>{
+  var p = parts[z.v('#make').toLowerCase()];
+  !p ? window.open(`https://www.google.com/search?q=${z.v('#year')} ${z.v('#make')} ${z.v('#model')} parts`) : listParts(p);
+};
+
 z.z('#tax',0).onclick=()=>window.open(`http://www.sale-tax.com/${z.v('#zip')}`);
 if(window.location.search){
   z.v('#vin',window.location.search.slice(1));
