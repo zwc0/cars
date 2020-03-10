@@ -13,13 +13,13 @@
   <a>Year</a>
   <a>Make</a>
   <a>Model</a>
-  <input id="year">
+  <input id="year" type="number">
   <input id="make">
   <input id="model">
   <a class="c2">VIN</a>
   <a>ZIP</a>
   <input id="vin" class="c2">
-  <input id="zip">
+  <input id="zip" type="number">
   <button id="decode">VIN Decode</button>
   <button id="nada">NADA</button>
   <button id="kbb">KBB</button>
@@ -35,23 +35,35 @@
 <script type="module">
 import * as z from 'https://cdn.rawgit.com/zerowolfcode/zlib/4cd52327/zt.js';
 import * as parts from 'https://zwc0.github.io/cars/parts.js';
+//onchange for inputs to set variables
+var inputs={};
+z.each('input',e=>{
+  inputs[e.id]='';
+  e.addEventListener('change',e=>inputs[e.target.id]=e.target.value.toLowerCase());
+});
+//buttons
 z.z('#decode',0).onclick=()=>{
-  fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${z.v('#vin')}?format=json`)
+  fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevinvalues/${inputs.vin}?format=json`)
   .then(e=>e.json())
   .then(e=>{
     e=e.Results[0];
     z.v('#year',e.ModelYear);
     z.v('#make',e.Make);
     z.v('#model',e.Model);
+    //trigger change event
+    let evt = new CustomEvent('change');
+    z.z('#year')[0].dispatchEvent(evt);
+    z.z('#make')[0].dispatchEvent(evt);
+    z.z('#model')[0].dispatchEvent(evt);
   }).catch(e=>alert(e));
   return false;
 };
-z.z('#nada',0).onclick=()=>window.open(`https://www.nadaguides.com/Cars/${z.v('#year')}/${z.v('#make')}/${z.v('#model')}`);
-z.z('#kbb',0).onclick=()=>window.open(`https://www.kbb.com/${z.v('#make')}/${z.v('#model')}/${z.v('#year')}/styles/?intent=buy-used&pricetype=retail`);
-z.z('#decodeThis',0).onclick=()=>window.open(`https://www.decodethis.com/vin/${z.v('#vin')}`);
-z.z('#nam',0).onclick=()=>window.open(`https://www.northamericanmotoring.com/forums/vindecoder.php?vin=${z.v('#vin')}`);
-z.z('#autotrader',0).onclick=()=>window.open(`https://www.autotrader.com/cars-for-sale/${z.v('#year')}/${z.v('#make')}/${z.v('#model')}/?zip=${z.v('#zip')}`);
-z.z('#dealer',0).onclick=()=>window.open(`https://www.google.com/search?q=${z.v('#make')} dealer`);
+z.z('#nada',0).onclick=()=>window.open(`https://www.nadaguides.com/Cars/${inputs.year}/${inputs.make}/${inputs.model}`);
+z.z('#kbb',0).onclick=()=>window.open(`https://www.kbb.com/${inputs.make}/${inputs.model}/${inputs.year}/styles/?intent=buy-used&pricetype=retail`);
+z.z('#decodeThis',0).onclick=()=>window.open(`https://www.decodethis.com/vin/${inputs.vin}`);
+z.z('#nam',0).onclick=()=>window.open(`https://www.northamericanmotoring.com/forums/vindecoder.php?vin=${inputs.vin}`);
+z.z('#autotrader',0).onclick=()=>window.open(`https://www.autotrader.com/cars-for-sale/${inputs.year}/${inputs.make}/${inputs.model}/?zip=${inputs.zip}`);
+z.z('#dealer',0).onclick=()=>window.open(`https://www.google.com/search?q=${inputs.make} dealer`);
 
 var listParts=(p)=>{
   //back
@@ -60,11 +72,14 @@ var listParts=(p)=>{
   button.textContent='Back';
   button.onclick=()=>{z.s('#main');z.h('#partsList');center.remove();return false};
   z.a(center,button);
-  //google
-  button = z.c('button');
-  button.textContent='Google';
-  button.onclick=()=>window.open(`https://www.google.com/search?q=${z.v('#year')} ${z.v('#make')} ${z.v('#model')} parts`);
-  z.a(center,button);
+  //generic options
+  for ( var i in parts.generic ){
+    let g=parts.generic[i];
+    button = z.c('button');
+    button.textContent = i;
+    button.onclick=()=>window.open(`https://${g.includes("${") ? eval(g) : g}`);
+    z.a(center,button);
+  }
   //display other options
   for ( var i in p ){
     button = z.c('button');
@@ -72,17 +87,13 @@ var listParts=(p)=>{
     button.onclick=()=>window.open(`https://${p[i]}`);
     z.a(center,button);
   }
+  //attach elements and show list
   z.a('#partsList',center);
   z.h('#main');
   z.s('#partsList');
 };
-
-z.z('#parts',0).onclick=()=>{
-  var p = parts[z.v('#make').toLowerCase()];
-  !p ? window.open(`https://www.google.com/search?q=${z.v('#year')} ${z.v('#make')} ${z.v('#model')} parts`) : listParts(p);
-};
-
-z.z('#tax',0).onclick=()=>window.open(`http://www.sale-tax.com/${z.v('#zip')}`);
+z.z('#parts',0).onclick=()=>listParts(parts[inputs.make]);
+z.z('#tax',0).onclick=()=>window.open(`http://www.sale-tax.com/${inputs.zip}`);
 if(window.location.search){
   z.v('#vin',window.location.search.slice(1));
   z.z('#decode',0).click();
