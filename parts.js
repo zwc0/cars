@@ -1,6 +1,6 @@
 export var
 generic = {
-  "Google" : "`google.com/search?q=${year} ${make} ${model} parts`",
+  "Google" : "`google.com/search?q=${inputs.year} ${inputs.make} ${inputs.model} parts`",
   "NAPA" : "napaonline.com",
 },
 ford = {
